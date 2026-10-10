@@ -1,0 +1,33 @@
+# ==========================================
+# Entornos Virtuales y Dependencias Locales
+# ==========================================
+venv/
+env/
+ENV/
+
+# ==========================================
+# Caché de Python y Compilados
+# ==========================================
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# Bases de Datos Locales y Archivos Temporales
+# ==========================================
+*.db
+*.sqlite3
+*.log
+
+# ==========================================
+# Entornos de Configuración y Claves Secretas
+# ==========================================
+.env
+.env.local
+
+# ==========================================
+# Configuraciones del Editor de Código (VS Code / PyCharm)
+# ==========================================
+.vscode/
+.idea/

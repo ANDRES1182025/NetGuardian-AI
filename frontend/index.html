@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetGuardian AI - Security Operations Center</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-shield-halved brand-icon"></i>
+        <h2>NetGuardian <span>AI</span></h2>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-link active" id="nav-dashboard" onclick="switchTab('dashboard', event)">
+          <i class="fa-solid fa-chart-line"></i> Dashboard
+        </a>
+        <a href="#" class="nav-link" id="nav-scanner" onclick="switchTab('scanner', event)">
+          <i class="fa-solid fa-radar"></i> Escáner IA
+        </a>
+        <a href="#" class="nav-link hidden" id="nav-users" onclick="switchTab('users', event); loadUsersList();">
+          <i class="fa-solid fa-users-gear"></i> Usuarios
+        </a>
+      </nav>
+
+      <div class="system-status">
+        <div class="status-indicator active" id="status-dot"></div>
+        <span id="api-status">Conectando a la API...</span>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+      
+      <header class="top-header">
+        <h1 id="view-title">Centro de Operaciones Tácticas</h1>
+        <div style="position: relative;">
+          <div class="user-profile" id="user-profile-btn" onclick="handleProfileClick()" style="cursor: pointer;">
+            <i class="fa-solid fa-circle-user"></i>
+            <span id="user-display">Acceso Analista</span>
+          </div>
+          
+          <!-- Menú Desplegable de Sesión Activa -->
+          <div id="user-dropdown" class="hidden" style="position: absolute; right: 0; top: 120%; background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 180px; z-index: 100; overflow: hidden;">
+            <button onclick="logout()" style="width: 100%; background: transparent; border: none; color: #ef4444; padding: 12px 16px; text-align: left; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- VISTA 1: DASHBOARD -->
+      <section id="view-dashboard" class="view-section active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="fa-solid fa-shield-virus stat-icon"></i>
+            <div>
+              <h3>Escaneos Totales</h3>
+              <p class="stat-number" id="stat-scans">0</p>
+            </div>
+          </div>
+          <div class="stat-card danger">
+            <i class="fa-solid fa-triangle-exclamation stat-icon"></i>
+            <div>
+              <h3>Amenazas Altas</h3>
+              <p class="stat-number" id="stat-threats">0</p>
+            </div>
+          </div>
+          <div class="stat-card success">
+            <i class="fa-solid fa-circle-check stat-icon"></i>
+            <div>
+              <h3>Motor IA</h3>
+              <p class="stat-number">Operativo</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card full-width margin-top">
+          <h3><i class="fa-solid fa-clock-rotate-left"></i> Actividad Reciente de Análisis</h3>
+          <div id="recent-scans-list" class="activity-list">
+            <div class="empty-state">
+              <i class="fa-solid fa-radar empty-icon"></i>
+              <p class="empty-title">Sistema a la espera del primer objetivo de red</p>
+              <p class="empty-sub">Ejecute una inspección desde el módulo Escáner IA para poblar el registro.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VISTA 2: ESCÁNER DE SEGURIDAD -->
+      <section id="view-scanner" class="view-section">
+        <div class="glass-card">
+          <h2><i class="fa-solid fa-microchip"></i> Analizador de Vulnerabilidades IA</h2>
+          <p class="subtitle" id="scanner-subtitle">Ingrese una URL, dominio o IP para procesar amenazas.</p>
+
+          <form id="scan-form">
+            <div class="input-group">
+              <label for="scan-target">Objetivo de Análisis (URL / IP / Host)</label>
+              <input type="text" id="scan-target" placeholder="https://ejemplo.com o IP de servidor" required>
+            </div>
+
+            <div class="input-group margin-top">
+              <label for="scan-type">Tipo de Inspección</label>
+              <select id="scan-type">
+                <option value="quick">Análisis Rápido de Red</option>
+                <option value="deep" id="opt-deep" disabled>🔒 Inspección Profunda de Vulnerabilidades (IA)</option>
+              </select>
+            </div>
+
+            <div class="input-group margin-top">
+              <label for="filter-severity">Severidad de Prueba</label>
+              <select id="filter-severity">
+                <option value="Alto" id="opt-sev-alto" disabled>🔒 Alto (Requiere sesión)</option>
+                <option value="Medio">Medio</option>
+                <option value="Bajo">Bajo</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-primary margin-top" id="btn-scan">
+              <i class="fa-solid fa-radar"></i> Iniciar Escaneo
+            </button>
+          </form>
+        </div>
+
+        <!-- CONTENEDOR DE TELEMETRÍA Y RECONOCIMIENTO ACTIVO -->
+        <div id="active-telemetry-container" class="margin-top hidden"></div>
+
+        <div id="terminal-card" class="glass-card margin-top">
+          <div class="terminal-header">
+            <span><i class="fa-solid fa-terminal"></i> Terminal de Salida IA — CyberSentinel Logs</span>
+            <div class="terminal-dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+          </div>
+          <div class="terminal-body" id="terminal-logs">
+            <div class="log-line text-muted">[SYSTEM] Consola iniciada. Esperando comandos...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VISTA 3: USUARIOS -->
+      <section id="view-users" class="view-section">
+        <div class="glass-card">
+          <h2><i class="fa-solid fa-user-shield"></i> Gestión de Analistas y Usuarios</h2>
+          <p class="subtitle">Panel de administración de privilegios y cuentas de usuario.</p>
+          <div id="users-table-container" class="margin-top">
+            <div class="empty-state">
+              <i class="fa-solid fa-users-slash empty-icon"></i>
+              <p class="empty-title">Sin usuarios cargados</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL FLOTANTE DE AUTENTICACIÓN / REGISTRO -->
+  <div id="login-modal" class="modal-overlay hidden">
+    <div class="glass-card modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title"><i class="fa-solid fa-lock"></i> Acceso Analista SOC</h3>
+        <i class="fa-solid fa-xmark close-icon" onclick="toggleModal(false)"></i>
+      </div>
+
+      <!-- Pestañas internas del Modal -->
+      <div class="modal-tabs margin-top">
+        <button type="button" class="tab-btn active" id="btn-tab-login" onclick="switchModalTab('login')">Iniciar Sesión</button>
+        <button type="button" class="tab-btn" id="btn-tab-register" onclick="switchModalTab('register')">Registrarse</button>
+      </div>
+
+      <!-- Formulario de Login -->
+      <form id="login-form" class="margin-top">
+        <div class="input-group">
+          <label>Correo Electrónico</label>
+          <input type="email" id="login-email" required placeholder="analista@netguardian.ai">
+        </div>
+        <div class="input-group margin-top">
+          <label>Contraseña</label>
+          <input type="password" id="login-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-primary margin-top" style="width: 100%;">Entrar al Sistema</button>
+      </form>
+
+      <!-- Formulario de Registro -->
+      <form id="register-form" class="margin-top hidden">
+        <div class="input-group">
+          <label>Nombre de Usuario</label>
+          <input type="text" id="reg-username" required placeholder="Analista_01">
+        </div>
+        <div class="input-group margin-top">
+          <label>Correo Electrónico</label>
+          <input type="email" id="reg-email" required placeholder="analista@netguardian.ai">
+        </div>
+        <div class="input-group margin-top">
+          <label>Contraseña (máx. 72 bytes)</label>
+          <input type="password" id="reg-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-primary margin-top" style="width: 100%;">Registrar Analista</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

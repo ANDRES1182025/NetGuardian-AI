@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetGuardian AI - Modelos Entidad-Relación (MER)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'dark',
+            securityLevel: 'loose',
+            er: { useMaxWidth: true }
+        });
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Encabezado -->
+        <header class="mb-8 border-b border-slate-800 pb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-black text-blue-500 tracking-tight">NetGuardian AI</h1>
+                <p class="text-slate-400 text-sm mt-1">Modelos Entidad-Relación (MER) — Conceptualización del Dominio y Esquema de Base de Datos</p>
+            </div>
+            <div class="bg-blue-900/40 border border-blue-600/50 px-4 py-2 rounded-lg text-xs text-blue-300 font-medium">
+                📄 Listo para Expoproyects y Word
+            </div>
+        </header>
+
+        <!-- SECCIÓN 1: MODELO CONCEPTUAL GLOBAL -->
+        <section class="mb-12 bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+            <div class="mb-4">
+                <h2 class="text-lg font-bold text-slate-200">1. Modelo Conceptual Global del Proyecto</h2>
+                <p class="text-xs text-slate-400">Representa los objetos del mundo real y su funcionalidad en el ecosistema de ciberseguridad.</p>
+            </div>
+
+            <div class="mermaid flex justify-center bg-slate-950/60 p-6 rounded-lg border border-slate-800/80 overflow-x-auto">
+                erDiagram
+                    USER ||--o{ SCAN : "ejecuta y solicita"
+                    SCAN ||--|| TARGET : "audita e inspecciona"
+                    SCAN ||--|| AI_ENGINE : "procesa mediante"
+                    SCAN ||--o{ REPORT : "genera documento"
+                    AI_ENGINE ||--o{ TELEMETRY : "analiza red y puertos"
+
+                    USER {
+                        string actor "Analista SOC / Administrador / Estudiante"
+                        string function "Gestiona credenciales, roles y auditorías"
+                    }
+
+                    TARGET {
+                        string object "Sitio Web, IP o Dominio objetivo"
+                        string function "Entidad del mundo real bajo inspección perimetral"
+                    }
+
+                    SCAN {
+                        string process "Auditoría activa de seguridad"
+                        string function "Calcula severidad y clasifica riesgos"
+                    }
+
+                    AI_ENGINE {
+                        string technology "DeBERTa-v3 INT8 (IA Local)"
+                        string function "Clasificación semántica y heurística de amenazas"
+                    }
+
+                    REPORT {
+                        string deliverable "Informe PDF Ejecutivo (Big Four)"
+                        string function "Presenta métricas, matrices 5x5 y planes de acción"
+                    }
+
+                    TELEMETRY {
+                        string data "Puertos TCP y Endpoints"
+                        string function "Evidencia técnica cruda del servidor"
+                    }
+            </div>
+            <div class="mt-4 text-xs text-slate-400 bg-slate-950/40 p-3 rounded border border-slate-800">
+                <b>Explicación funcional:</b> Un <b>Usuario (Actor)</b> introduce un <b>Objetivo (Target)</b> para ejecutar un <b>Escaneo (Proceso)</b>. El sistema utiliza un <b>Motor de IA</b> para analizar la <b>Telemetría</b> obtenida y finalmente compilar un <b>Informe (Entregable gerencial)</b>.
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: MODELO ENTIDAD-RELACIÓN DE BASE DE DATOS -->
+        <section class="mb-12 bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+            <div class="mb-4">
+                <h2 class="text-lg font-bold text-slate-200">2. Modelo Entidad-Relación Físico (Base de Datos)</h2>
+                <p class="text-xs text-slate-400">Estructura relacional que soporta el inicio de sesión, roles de administrador, registros e historiales.</p>
+            </div>
+
+            <div class="mermaid flex justify-center bg-slate-950/60 p-6 rounded-lg border border-slate-800/80 overflow-x-auto">
+                erDiagram
+                    USER ||--o{ SCAN : "realiza"
+                    SCAN ||--o{ PORT_RESULT : "contiene"
+                    SCAN ||--o{ PATH_RESULT : "almacena"
+
+                    USER {
+                        int id PK "Identificador único"
+                        string username "Nombre de usuario (Login)"
+                        string email "Correo de contacto"
+                        string hashed_password "Contraseña cifrada (Seguridad)"
+                        boolean is_admin "Rol de Administrador / Permisos"
+                        datetime created_at "Fecha de registro"
+                    }
+
+                    SCAN {
+                        int id PK "Identificador del escaneo"
+                        string target "URL o IP auditada"
+                        string vulnerability_found "Diagnóstico global"
+                        string severity "Nivel (Bajo, Medio, Alto)"
+                        string inspection_type "Rápido o Profundo (IA)"
+                        json active_telemetry "Telemetría estructurada"
+                        datetime scanned_at "Marca de tiempo"
+                        int user_id FK "Usuario responsable"
+                    }
+
+                    PORT_RESULT {
+                        int id PK
+                        int scan_id FK "Relación con escaneo"
+                        int port_number "Puerto TCP (ej. 80, 443)"
+                        string state "Estado (Abierto/Cerrado)"
+                        string service_name "Servicio detectado"
+                    }
+
+                    PATH_RESULT {
+                        int id PK
+                        int scan_id FK "Relación con escaneo"
+                        string path_url "Ruta descubierta (ej. /admin)"
+                        int status_code "Código HTTP (200, 403)"
+                        string risk_level "Evaluación de riesgo"
+                    }
+            </div>
+            <div class="mt-4 text-xs text-slate-400 bg-slate-950/40 p-3 rounded border border-slate-800">
+                <b>Explicación de la Base de Datos:</b> La tabla <b>User</b> maneja la autenticación y los permisos de administrador. Cada usuario puede registrar múltiples <b>Scan</b> (historial). A su vez, cada escaneo se desglosa relacionalmente en tablas hijas como <b>PortResult</b> y <b>PathResult</b> para garantizar la normalización de la base de datos relacional.
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: MODELO ENTIDAD-RELACIÓN LÓGICO -->
+        <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+            <div class="mb-4">
+                <h2 class="text-lg font-bold text-slate-200">3. Modelo Entidad-Relación Lógico</h2>
+                <p class="text-xs text-slate-400">Representación simplificada enfocada puramente en las entidades del sistema y sus asociaciones sin detalles de atributos o tipos de datos.</p>
+            </div>
+
+            <div class="mermaid flex justify-center bg-slate-950/60 p-6 rounded-lg border border-slate-800/80 overflow-x-auto">
+                erDiagram
+                    USER ||--o{ SCAN : "realiza"
+                    SCAN ||--o{ PORT_RESULT : "contiene"
+                    SCAN ||--o{ PATH_RESULT : "almacena"
+            </div>
+            <div class="mt-4 text-xs text-slate-400 bg-slate-950/40 p-3 rounded border border-slate-800">
+                <b>Explicación estructural:</b> Este diagrama muestra de manera limpia el flujo jerárquico del sistema: el <b>Usuario</b> interactúa con la plataforma generando uno o más <b>Escaneos</b>, los cuales se desprenden en los resultados de <b>Puertos</b> y <b>Rutas Web</b> sin saturación de texto técnico.
+            </div>
+        </section>
+
+        <footer class="mt-8 text-center text-xs text-slate-500">
+            NetGuardian AI Architecture &bull; Diseñado para Expoproyects y Defensa Académica en Bases de Datos y DOO.
+        </footer>
+    </div>
+</body>
+</html>
