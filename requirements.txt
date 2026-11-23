@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
-psycopg2-binary
+psycopg[binary]
 pydantic
 transformers
 torch
@@ -9,5 +9,3 @@ passlib
 python-jose
 python-dotenv
 pydantic[email]
-
-#genera este comando víctor (pip install -r requirements.txt) para instalar todas las librerias del proyecto
