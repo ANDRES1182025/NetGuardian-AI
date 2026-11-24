@@ -4,8 +4,6 @@ sqlalchemy
 httpx
 psycopg[binary]
 pydantic
-transformers
-torch
 passlib
 python-jose
 python-dotenv
