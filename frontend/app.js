@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://netguardian-ai-qs24.onrender.com";
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
@@ -93,7 +93,7 @@ async function checkBackendStatus() {
     document.getElementById('api-status').innerText = "API Desconectada";
     document.getElementById('api-status').style.color = "#ef4444";
     document.getElementById('status-dot').className = "status-indicator";
-    addLog("[ERROR] No se pudo conectar con la API en http://127.0.0.1:8000", "error");
+    addLog(`[ERROR] No se pudo conectar con la API en ${API_URL}`, "error");
   }
 }
 
